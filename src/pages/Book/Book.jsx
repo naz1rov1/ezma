@@ -27,11 +27,11 @@ const Book = () => {
   const filteredBooks = books || [];
 
   return (
-    <div>
-      <Container className="mt-30">
+    <div className=" bg-[#eef5ff] p-30">
+      <Container className="">
         <h1 className="text-2xl ">Kitoblar</h1>
       </Container>
-      <Container className="mt-6 mb-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      <Container className="mt-6  grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {filteredBooks.length > 0 ? (
           filteredBooks.slice(0, 16).map((book) => (
             <div

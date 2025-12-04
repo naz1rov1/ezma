@@ -11,7 +11,7 @@ const Home = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // 📌 API dan barcha kitoblarni olish
+
   const fetchBooks = async () => {
     try {
       const response = await api.get("api/v1/books/books/");
@@ -26,7 +26,7 @@ const Home = () => {
     fetchBooks();
   }, []);
 
-  // 📌 Qidiruv
+  
   const handleSearch = async () => {
     if (!search.trim()) {
       fetchBooks();
@@ -44,12 +44,12 @@ const Home = () => {
     }
   };
 
-  // 📌 ENTER bosilganda qidirish
+  
   const handleKeyPress = (e) => {
     if (e.key === "Enter") handleSearch();
   };
 
-  // 📌 Avtomatik qidirish (debounce)
+  
   useEffect(() => {
     const delay = setTimeout(() => {
       handleSearch();
@@ -59,7 +59,7 @@ const Home = () => {
   }, [search]);
 
   return (
-    <div className="w-full bg-gradient from-[#eef5ff] to-[#dde7f5] relative overflow-hidden mt-50 pb-20">
+    <div className="w-full bg-gradient bg-[#eef5ff] relative overflow-hidden p-50 pb-20">
       <Container size="md" className="relative z-10 text-center">
         <Text
           style={{ fontSize: "32px", color: "#3b82f6", fontWeight: "bold" }}

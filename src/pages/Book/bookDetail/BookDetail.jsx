@@ -1,4 +1,4 @@
-// src/pages/BookDetail.jsx
+
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Text, Image, Loader } from "@mantine/core";
