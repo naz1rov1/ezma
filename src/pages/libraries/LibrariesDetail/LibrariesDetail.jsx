@@ -1,91 +1,126 @@
 import React, { useEffect, useState } from "react";
 import { Container, Text, Image, Loader } from "@mantine/core";
 import { useParams } from "react-router-dom";
+
 import kitob1 from "../../../assets/1d61aded6f8ad28f9e18fe349b327f33.jpg";
 import { api } from "../../../API/api";
 
-const LibrariesDetail = () => {
+const LibraryDetail = () => {
   const { id } = useParams();
-  const [library, setLibrary] = useState(null);
+  const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  const fetchLibraryDetail = async () => {
+  const fetchDetail = async () => {
     try {
-      const response = await api.get(`api/v1/libraries/library/${id}/`);
-      setLibrary(response.data);
+      const res = await api.get(`api/v1/libraries/library/${id}/`);
+      setData(res.data.results);
     } catch (err) {
-      console.error("Library Detail Error:", err);
-      setError("Kutubxona ma'lumotlarini olishda xatolik yuz berdi.");
-    } finally {
-      setLoading(false);
+      console.error(err);
+      setError("Ma'lumot yuklanmadi");
     }
   };
 
   useEffect(() => {
-    fetchLibraryDetail();
+    fetchDetail();
   }, [id]);
 
-  if (loading) {
-    return (
-      <div className="w-full flex justify-center items-center h-screen">
-        <Loader size="lg" color="blue" />
-      </div>
-    );
-  }
-
-  if (error) {
+  if (error)
     return (
       <Container className="text-center mt-20 text-red-500 text-xl">
         {error}
       </Container>
     );
-  }
+
+  if (!data)
+    return (
+      <div className="flex justify-center mt-20">
+        <Loader size="lg" color="blue" />
+      </div>
+    );
+
+  const library = data.library || {};
 
   return (
-    <div className="w-full bg-[#eef5ff] min-h-screen pb-20 pt-20">
+    <div className="w-full bg-[#eef5ff] min-h-screen pb-20 pt-10">
       <Container>
-        <h1 className="text-3xl font-semibold text-blue-600 text-center mb-10">
-          {library?.name}
+        <h1 className="text-3xl font-semibold text-blue-600 text-center">
+          Kutubxona ma'lumotlari
         </h1>
+      </Container>
 
-        <div className="bg-white shadow-xl flex flex-col md:flex-row overflow-hidden">
-       
-          <div className="md:w-1/3 h-50 md:h-auto">
+      <Container className="bg-white shadow-xl rounded-2xl mt-10 p-8">
+        {/* IMAGE + INFO SIDE BY SIDE */}
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* LEFT SIDE IMAGE */}
+          <div className="md:w-1/2 w-full h-80 rounded-xl overflow-hidden shadow-md">
             <Image
-              src={kitob1}
-              alt={library?.name}
+              src={library.image || kitob1}
+              alt={library.name}
               fit="cover"
               className="w-full h-full object-cover"
             />
           </div>
 
-        
-          <div className="md:w-1/2 p-8 flex flex-col justify-center space-y-3 text-gray-700">
-            <Text size="xl" weight={700} className="mb-4">
-              Kutubxona ma'lumotlari
+          {/* RIGHT SIDE INFO */}
+          <div className="md:w-1/2 w-full space-y-4">
+            <Text weight={700} size="xl" className="text-gray-800">
+              {library?.name}
             </Text>
 
-            <p>
-              <strong className="text-blue-600">Nomi:</strong> {library?.name}
-            </p>
-
-            <p>
-              <strong className="text-blue-600">Manzil:</strong>{" "}
-              {library?.address}
-            </p>
-
-            <p>
-              <strong className="text-blue-600">Kitoblar soni:</strong>{" "}
-              {library?.total_books}
-            </p>
-
-          
+            {/* Dynamic Info */}
+            {Object.entries({
+              address: library?.address,
+              phone: data?.phone,
+              total_books: data?.total_books,
+              is_active: data?.is_active ? "true" : "false",
+            })
+              .filter(([_, value]) => value !== null && value !== undefined)
+              .map(([key, value]) => (
+                <div
+                  key={key}
+                  className="bg-gray-100 p-4 rounded-lg shadow-sm flex justify-between"
+                >
+                  <Text className="font-semibold text-gray-700 capitalize">
+                    {key.replace("_", " ")}
+                  </Text>
+                  <Text className="text-gray-600">{value}</Text>
+                </div>
+              ))}
           </div>
         </div>
+
+        {/* BOOKS LIST */}
+        {Array.isArray(data.books) && data.books.length > 0 && (
+          <div className="mt-12">
+            <Text weight={700} size="lg" className="mb-4">
+              Kitoblar ro‘yxati
+            </Text>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+              {data.books.map((book) => (
+                <div
+                  key={book.id}
+                  className="p-4 bg-[#f8fafc] rounded-xl shadow hover:shadow-md transition cursor-pointer"
+                >
+                  {Object.entries(book).map(([key, value]) => (
+                    <div
+                      key={key}
+                      className="flex justify-between text-sm mb-1"
+                    >
+                      <span className="font-semibold capitalize">
+                        {key.replace("_", " ")}:
+                      </span>
+                      <span>{value}</span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </Container>
     </div>
   );
 };
 
-export default LibrariesDetail;
+export default LibraryDetail;
