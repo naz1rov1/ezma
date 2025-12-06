@@ -1,10 +1,8 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Text, Image, Loader } from "@mantine/core";
 import { api } from "../../../API/api";
 import kitob from "../../../assets/64dc9a11eeb76.webp";
-
 
 const BookDetail = () => {
   const { id } = useParams();
@@ -21,7 +19,6 @@ const BookDetail = () => {
         setError("Kitob ma'lumotlarini yuklashda xatolik.");
       }
     };
-
     fetchBook();
   }, [id]);
 
@@ -40,31 +37,42 @@ const BookDetail = () => {
     );
 
   return (
-    <Container size="sm" className="mt-30 mb-10 bg-white shadow-xl p-8 rounded-2xl ">
-      <Image
-        src={kitob}
-        alt={book.title}
-        height={300}
-        fit="contain"
-        className="mx-auto rounded-lg"
-      />
+    <Container
+      size="lg"
+      className="bg-white shadow-xl p-10 rounded-2xl mt-20 mb-20"
+    >
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+    
+        <div className="flex justify-center">
+          <Image
+            src={kitob}
+            alt={book.title}
+            height={350}
+            fit="contain"
+            className="rounded-xl shadow-md"
+          />
+        </div>
 
-      <Text size="xl" weight={700} className="mt-4 text-center">
-        {book.title}
-      </Text>
+        <div>
+          <Text size="xl" weight={700} className="mb-4 text-gray-900">
+            {book.title}
+          </Text>
 
-      <Text size="md" className="mt-2 text-gray-600">
-        <strong>Muallif:</strong> {book.author}
-      </Text>
+          <div className="space-y-2 text-gray-700">
+            <Text size="md">
+              <strong>Muallif:</strong> {book.author}
+            </Text>
 
-      <Text size="md" className="mt-1 text-gray-600">
-        <strong>Nashriyot:</strong> {book.publisher}
-      </Text>
+            <Text size="md">
+              <strong>Nashriyot:</strong> {book.publisher}
+            </Text>
 
-      <Text size="md" className="mt-1 text-gray-600">
-        <strong>Mavjud nusxalar:</strong> {book.quantity_in_library}
-      </Text>
-
+            <Text size="md">
+              <strong>Mavjud nusxalar:</strong> {book.quantity_in_library}
+            </Text>
+          </div>
+        </div>
+      </div>
     </Container>
   );
 };

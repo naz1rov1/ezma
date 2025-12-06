@@ -1,9 +1,14 @@
 import { Button, Container, Flex } from "@mantine/core";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import authStore from "../store/authStore";
+import user from "../../assets/user-circles-set_78370-4704.avif"
 
 export const HEADER_HEIGHT = 100;
 
 const Header = () => {
+  const navigate = useNavigate();
+  const { isAuth } = authStore();
+
   const logoUrl =
     "https://ezma-client.vercel.app/assets/ezma-light-D6Z9QF3F.svg";
 
@@ -14,6 +19,7 @@ const Header = () => {
     >
       <Container maw={1320} mx="auto" className="h-full">
         <Flex justify="space-between" align="center" className="h-full">
+        
           <Flex align="center" gap={50}>
             <div>
               <img className="w-[130px]" src={logoUrl} alt="Ezma Logo" />
@@ -34,19 +40,6 @@ const Header = () => {
               </NavLink>
 
               <NavLink
-                to="/info"
-                className={({ isActive }) =>
-                  `font-Poppins text-lg transition-colors duration-200 ${
-                    isActive
-                      ? "font-bold text-[#00aeff]"
-                      : "text-gray-700 hover:text-[#00aeff]"
-                  }`
-                }
-              >
-                Ma'lumotlar
-              </NavLink>
-
-              <NavLink
                 to="/libraries"
                 className={({ isActive }) =>
                   `font-Poppins text-lg transition-colors duration-200 ${
@@ -58,6 +51,7 @@ const Header = () => {
               >
                 Kutubxonalar
               </NavLink>
+
               <NavLink
                 to="/book"
                 className={({ isActive }) =>
@@ -68,19 +62,24 @@ const Header = () => {
                   }`
                 }
               >
-               Kitoblar
+                Kitoblar
               </NavLink>
             </Flex>
           </Flex>
 
-       
+  
           <Flex gap={20} align="center">
-            <Button
-              variant="filled"
-              className="bg-[#00aeff] hover:bg-[#0095d6] text-white font-semibold"
-            >
-              Kutubxonachi bo'lish
-            </Button>
+            {!isAuth && (
+              <Button
+                variant="filled"
+                onClick={() => navigate("/login")} 
+                className="bg-[#00aeff] hover:bg-[#0095d6] text-white font-semibold"
+              >
+                Kutubxonachi bo'lish
+              </Button>
+            )}
+            {isAuth && <NavLink to="profile">
+              <img className="w-15" src={user} alt="" /></NavLink>}
           </Flex>
         </Flex>
       </Container>

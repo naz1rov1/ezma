@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Container, Text, Button, TextInput, Flex, Image } from "@mantine/core";
-
 import kitob from "../../assets/64dc9a11eeb76.webp";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../API/api";
@@ -9,8 +8,8 @@ const Home = () => {
   const [books, setBooks] = useState([]);
   const [search, setSearch] = useState("");
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
 
   const fetchBooks = async () => {
     try {
@@ -26,7 +25,6 @@ const Home = () => {
     fetchBooks();
   }, []);
 
-  
   const handleSearch = async () => {
     if (!search.trim()) {
       fetchBooks();
@@ -44,12 +42,10 @@ const Home = () => {
     }
   };
 
-  
   const handleKeyPress = (e) => {
     if (e.key === "Enter") handleSearch();
   };
 
-  
   useEffect(() => {
     const delay = setTimeout(() => {
       handleSearch();
@@ -59,7 +55,7 @@ const Home = () => {
   }, [search]);
 
   return (
-    <div className="w-full bg-gradient bg-[#eef5ff] relative overflow-hidden p-50 pb-20">
+    <div className="w-full bg-[#eef5ff] relative p-50 pb-20">
       <Container size="md" className="relative z-10 text-center">
         <Text
           style={{ fontSize: "32px", color: "#3b82f6", fontWeight: "bold" }}
@@ -84,6 +80,31 @@ const Home = () => {
             Qidirish
           </Button>
         </Flex>
+
+        {search && books.length > 0 && (
+          <div className="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-xl mt-4 p-4 max-h-80 overflow-y-scroll">
+            {books.map((book) => (
+              <div
+                key={book.id}
+                className="flex justify-between items-center border-b last:border-none py-3"
+              >
+                <div>
+                  <p className="font-semibold text-lg">{book.title}</p>
+                  <p className="text-gray-600 text-sm">
+                    {book.author} | {book.publisher}
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => navigate(`/book/${book.id}`)}
+                  className="px-4 py-1 border border-blue-500 text-blue-500 rounded-xl hover:bg-blue-50 transition"
+                >
+                  Batafsil
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </Container>
 
       <div className="flex items-end justify-center">
@@ -100,56 +121,62 @@ const Home = () => {
         </Container>
       )}
 
-      <Container>
-        <h1 className="text-2xl font-semibold">Eng ko'p o'qilgan kitoblar</h1>
-      </Container>
+      {!search && (
+        <>
+          <Container>
+            <h1 className="text-2xl font-semibold">
+              Eng ko'p o'qilgan kitoblar
+            </h1>
+          </Container>
 
-      <Container className="mt-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-4 gap-6">
-        {books.length > 0 ? (
-          books.slice(0, 4).map((book) => (
-            <div
-              onClick={() => navigate(`/book/${book.id}`)}
-              key={book.id}
-              className="bg-white rounded-2xl shadow-lg hover:shadow-2xl 
-              transition-all duration-300 overflow-hidden cursor-pointer"
-            >
-              <div className="h-56 w-full overflow-hidden">
-                <Image
-                  src={kitob}
-                  alt={book.title}
-                  fit="cover"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              <div className="px-5 py-4">
-                <Text weight={700} size="xl" className="mb-2">
-                  {book.title}
-                </Text>
-
-                <Text size="sm" color="dimmed" className="mb-1">
-                  <strong>Muallif:</strong> {book.author}
-                </Text>
-
-                <Text size="sm" color="dimmed" className="mb-1">
-                  <strong>Nashriyot:</strong> {book.publisher}
-                </Text>
-
-                <button
-                  className="mt-4 px-4 py-2 border border-blue-500 
-                text-blue-500 rounded-xl font-semibold hover:bg-blue-50 transition"
+          <Container className="mt-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-4 gap-6">
+            {books.length > 0 ? (
+              books.slice(0, 4).map((book) => (
+                <div
+                  onClick={() => navigate(`/book/${book.id}`)}
+                  key={book.id}
+                  className="bg-white rounded-2xl shadow-lg hover:shadow-2xl 
+                  transition-all duration-300 overflow-hidden cursor-pointer"
                 >
-                  {book.quantity_in_library} ta kitob mavjud
-                </button>
-              </div>
-            </div>
-          ))
-        ) : (
-          <Text className="text-center text-gray-500 col-span-full mt-10">
-            Kitoblar topilmadi.
-          </Text>
-        )}
-      </Container>
+                  <div className="h-56 w-full overflow-hidden">
+                    <Image
+                      src={kitob}
+                      alt={book.title}
+                      fit="cover"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  <div className="px-5 py-4">
+                    <Text weight={700} size="xl" className="mb-2">
+                      {book.title}
+                    </Text>
+
+                    <Text size="sm" color="dimmed" className="mb-1">
+                      <strong>Muallif:</strong> {book.author}
+                    </Text>
+
+                    <Text size="sm" color="dimmed" className="mb-1">
+                      <strong>Nashriyot:</strong> {book.publisher}
+                    </Text>
+
+                    <button
+                      className="mt-4 px-4 py-2 border border-blue-500 
+                      text-blue-500 rounded-xl font-semibold hover:bg-blue-50 transition"
+                    >
+                      {book.quantity_in_library} ta kitob mavjud
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <Text className="text-center text-gray-500 col-span-full mt-10">
+                Kitoblar topilmadi.
+              </Text>
+            )}
+          </Container>
+        </>
+      )}
     </div>
   );
 };
